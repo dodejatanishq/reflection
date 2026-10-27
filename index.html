@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REFLECTION — For Chhavi</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'blush-bg': '#F7F2EF',
+            'porcelain': '#FFFCFA',
+            'rose-cream': '#F2E6E3',
+            'cocoa': '#402D28',
+            'dark-taupe': '#67544E',
+            'dusty-taupe': '#92817A',
+            'rose-pink': '#C88696',
+            'pale-blush': '#F4E1E5',
+            'pink-border': '#E5D6D0',
+            'roasted': '#594034',
+            'warm-ivory': '#FFF9F6'
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            'paper': '0 4px 25px -2px rgba(64, 45, 40, 0.05), 0 2px 8px -1px rgba(64, 45, 40, 0.02)',
+            'paper-hover': '0 12px 30px -3px rgba(64, 45, 40, 0.09), 0 6px 14px -2px rgba(64, 45, 40, 0.04)',
+            'envelope': '0 14px 35px -5px rgba(64, 45, 40, 0.12)',
+            'glow-pink': '0 0 20px rgba(200, 134, 150, 0.25)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .paper-grain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.035;
+      background-image: 
+        radial-gradient(#402D28 1px, transparent 0),
+        radial-gradient(#402D28 1px, transparent 0);
+      background-position: 0 0, 8px 8px;
+      background-size: 16px 16px;
+    }
+
+    .ambient-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: orbDrift 22s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .ambient-orb-1 {
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, #F4E1E5 0%, rgba(247,242,239,0) 70%);
+      top: -100px;
+      left: -50px;
+    }
+
+    .ambient-orb-2 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, #E5D6D0 0%, rgba(247,242,239,0) 70%);
+      bottom: -150px;
+      right: -100px;
+      animation-delay: -11s;
+    }
+
+    @keyframes orbDrift {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(40px, 30px) scale(1.08); }
+      100% { transform: translate(-30px, 50px) scale(0.95); }
+    }
+
+    .dust-particle {
+      position: absolute;
+      border-radius: 50%;
+      background-color: #C88696;
+      opacity: 0;
+      pointer-events: none;
+      animation: floatParticle 8s infinite ease-in-out;
+    }
+
+    @keyframes floatParticle {
+      0% { opacity: 0; transform: translateY(0) scale(0.8); }
+      50% { opacity: 0.4; transform: translateY(-25px) scale(1.2); }
+      100% { opacity: 0; transform: translateY(-50px) scale(0.8); }
+    }
+
+    .view-section {
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .view-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(18px) scale(0.985);
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      visibility: hidden;
+    }
+
+    .view-active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+      position: relative;
+      visibility: visible;
+    }
+
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .view-active .reveal-1 { opacity: 1; transform: translateY(0); transition-delay: 0.08s; }
+    .view-active .reveal-2 { opacity: 1; transform: translateY(0); transition-delay: 0.20s; }
+    .view-active .reveal-3 { opacity: 1; transform: translateY(0); transition-delay: 0.32s; }
+    .view-active .reveal-4 { opacity: 1; transform: translateY(0); transition-delay: 0.44s; }
+    .view-active .reveal-5 { opacity: 1; transform: translateY(0); transition-delay: 0.56s; }
+
+    .heading-underline-container {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .heading-underline {
+      height: 1px;
+      background: linear-gradient(90deg, #C88696 0%, rgba(200, 134, 150, 0.15) 100%);
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      margin-top: 0.5rem;
+    }
+
+    .view-active .heading-underline {
+      transform: scaleX(1);
+      transition-delay: 0.35s;
+    }
+
+    .cover-border-svg rect {
+      stroke-dasharray: 1800;
+      stroke-dashoffset: 1800;
+      transition: stroke-dashoffset 2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .view-active .cover-border-svg rect {
+      stroke-dashoffset: 0;
+    }
+
+    .float-slow {
+      animation: floatBotanical 6s infinite alternate ease-in-out;
+    }
+
+    @keyframes floatBotanical {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-6px) rotate(1.5deg); }
+    }
+
+    @keyframes celebrationParticleAnim {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.2) rotate(0deg);
+      }
+      15% {
+        opacity: 1;
+        transform: translate(calc(var(--dx) * 0.4), calc(var(--dy) * 0.4)) scale(var(--peak-scale)) rotate(calc(var(--rot) * 0.3));
+      }
+      60% {
+        opacity: 0.95;
+        transform: translate(var(--dx), var(--dy)) scale(1) rotate(calc(var(--rot) * 0.75));
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(var(--dx) + var(--drift-x)), calc(var(--dy) + var(--drift-y))) scale(var(--end-scale)) rotate(var(--rot));
+      }
+    }
+
+    .celebration-particle {
+      position: absolute;
+      pointer-events: none;
+      will-change: transform, opacity;
+      animation: celebrationParticleAnim var(--duration) cubic-bezier(0.12, 0.8, 0.32, 1) forwards;
+      animation-delay: var(--delay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background-color: #594034;
+      color: #FFF9F6;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 0.875rem 1.75rem;
+      border-radius: 0.75rem;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      box-shadow: 0 4px 14px rgba(64, 45, 40, 0.1);
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary:hover {
+      background-color: #402D28;
+      box-shadow: 0 8px 22px rgba(64, 45, 40, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: 0 2px 8px rgba(64, 45, 40, 0.15);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: #67544E;
+      border: 1px solid #E5D6D0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 0.875rem 1.75rem;
+      border-radius: 0.75rem;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(244, 225, 229, 0.4);
+      color: #402D28;
+      border-color: #C88696;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(200, 134, 150, 0.12);
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.97);
+    }
+
+    .wax-seal-glow {
+      position: relative;
+    }
+    .wax-seal-glow::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(200,134,150,0.3) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .envelope-card-btn:hover .wax-seal-glow::after {
+      opacity: 1;
+    }
+
+    .chapter-card {
+      position: relative;
+      background-color: rgba(255, 252, 250, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid #E5D6D0;
+      border-radius: 1rem;
+      padding: 1.75rem;
+      box-shadow: 0 4px 25px -2px rgba(64, 45, 40, 0.05), 0 2px 8px -1px rgba(64, 45, 40, 0.02);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+      .chapter-card {
+        padding: 2.5rem;
+      }
+    }
+
+    .chapter-card:hover {
+      box-shadow: 0 12px 30px -3px rgba(64, 45, 40, 0.09), 0 6px 14px -2px rgba(64, 45, 40, 0.04);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .view-section, .btn-primary, .btn-secondary, .reveal-item, .heading-underline, .cover-border-svg rect, .ambient-orb, .dust-particle, .float-slow, .celebration-particle {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-blush-bg min-h-screen text-dark-taupe font-sans antialiased relative selection:bg-pale-blush selection:text-cocoa flex flex-col justify-center items-center py-8 px-4 sm:px-6 overflow-x-hidden">
+
+  <!-- Chosen Palette: Warm Neutral Blush & Cocoa -->
+  <!-- Application Structure Plan: Multi-screen interactive birthday narrative with consistent design layout, standardized chapter progress counters, polished proofread copy, and particle animation trigger. -->
+  <!-- Visualization & Content Choices: Sequential chapter flow -> Proofread elegant typography -> Interactive JS envelope trigger and smooth navigation -> Minimalist atmospheric design. -->
+  <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+  <div class="paper-grain" aria-hidden="true"></div>
+
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-orb ambient-orb-1"></div>
+    <div class="ambient-orb ambient-orb-2"></div>
+    <div class="dust-particle" style="top: 20%; left: 15%; width: 4px; height: 4px; animation-delay: 0s;"></div>
+    <div class="dust-particle" style="top: 65%; left: 80%; width: 5px; height: 5px; animation-delay: 2.5s;"></div>
+    <div class="dust-particle" style="top: 40%; left: 85%; width: 3px; height: 3px; animation-delay: 5s;"></div>
+    <div class="dust-particle" style="top: 80%; left: 20%; width: 4px; height: 4px; animation-delay: 3.8s;"></div>
+  </div>
+
+  <main class="w-full max-w-[576px] mx-auto relative z-10 flex flex-col justify-center my-auto">
+
+    <!-- COVER SECTION -->
+    <section id="view-cover" class="view-section view-active w-full" aria-hidden="false">
+      <div class="relative bg-porcelain/95 backdrop-blur-md border border-pink-border rounded-2xl p-8 sm:p-12 shadow-paper hover:shadow-paper-hover transition-all duration-500 text-center overflow-hidden">
+        
+        <svg class="cover-border-svg absolute inset-0 w-full h-full pointer-events-none p-2.5" aria-hidden="true">
+          <rect x="0" y="0" width="100%" height="100%" rx="12" fill="none" stroke="#C88696" stroke-width="1" stroke-dasharray="8 6" opacity="0.35" />
+        </svg>
+
+        <div class="absolute top-4 left-4 text-rose-pink/40 pointer-events-none float-slow" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+            <path d="M5 55 C 20 40, 25 20, 50 5" />
+            <path d="M22 36 C 18 30, 10 32, 14 24 C 20 26, 24 32, 22 36 Z" fill="rgba(200, 134, 150, 0.08)" />
+            <path d="M34 22 C 30 16, 22 18, 26 10 C 32 12, 36 18, 34 22 Z" fill="rgba(200, 134, 150, 0.08)" />
+            <circle cx="48" cy="7" r="2" fill="currentColor" />
+          </svg>
+        </div>
+
+        <div class="absolute bottom-4 right-4 text-rose-pink/40 pointer-events-none float-slow" style="animation-delay: -3s;" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+            <path d="M55 5 C 40 20, 35 40, 10 55" />
+            <path d="M38 24 C 42 30, 50 28, 46 36 C 40 34, 36 28, 38 24 Z" fill="rgba(200, 134, 150, 0.08)" />
+            <path d="M26 38 C 30 44, 38 42, 34 50 C 28 48, 24 42, 26 38 Z" fill="rgba(200, 134, 150, 0.08)" />
+            <circle cx="12" cy="53" r="2" fill="currentColor" />
+          </svg>
+        </div>
+
+        <div class="reveal-item reveal-1 mb-6 relative z-10">
+          <p class="font-sans text-xs tracking-[0.28em] text-dusty-taupe font-semibold uppercase">01.11.26</p>
+          <p class="font-sans text-[11px] tracking-[0.22em] text-rose-pink font-medium mt-1">11:30 AM</p>
+        </div>
+
+        <div class="reveal-item reveal-2 flex items-center justify-center gap-3 my-4 relative z-10" aria-hidden="true">
+          <div class="w-8 h-[1px] bg-gradient-to-r from-transparent to-pink-border"></div>
+          <svg class="w-3 h-3 text-rose-pink/60" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+          </svg>
+          <div class="w-8 h-[1px] bg-gradient-to-l from-transparent to-pink-border"></div>
+        </div>
+
+        <h1 class="reveal-item reveal-3 font-serif text-4xl sm:text-5xl md:text-6xl text-cocoa tracking-[0.2em] font-normal uppercase my-4 relative z-10">
+          REFLECTION
+        </h1>
+
+        <p class="reveal-item reveal-4 font-serif italic text-lg sm:text-xl text-dark-taupe mb-10 font-normal relative z-10">
+          A little something for your birthday
+        </p>
+
+        <div class="reveal-item reveal-5 relative z-10">
+          <button type="button" onclick="navigateTo('view-ch1')" class="btn-primary group">
+            <span>Open your birthday gift</span>
+            <span class="inline-block transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <div class="reveal-item reveal-5 mt-12 pt-4 relative z-10">
+          <p class="font-sans text-[10px] tracking-[0.3em] text-dusty-taupe/80 uppercase font-semibold">
+            MADE FOR CHHAVI
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHAPTER 1 -->
+    <section id="view-ch1" class="view-section view-hidden w-full" aria-hidden="true">
+      <div class="chapter-card">
+        
+        <div class="absolute top-3 right-3 sm:top-4 sm:right-4 text-rose-pink/35 pointer-events-none float-slow z-0" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M8 42 C 18 28, 28 18, 42 8" stroke-linecap="round"/>
+            <path d="M22 25 C 28 20, 35 24, 30 31 C 25 30, 21 26, 22 25 Z" fill="rgba(200,134,150,0.08)"/>
+            <circle cx="43" cy="7" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+
+        <div class="absolute bottom-4 right-4 text-rose-pink/30 pointer-events-none float-slow z-0" style="animation-delay: -3s;" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M45 5 C 32 18, 28 32, 8 45" stroke-linecap="round"/>
+            <path d="M30 20 C 34 25, 40 23, 37 29 C 32 28, 29 23, 30 20 Z" fill="rgba(200, 134, 150, 0.08)"/>
+            <circle cx="9" cy="44" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+
+        <div class="dust-particle" style="top: 15%; right: 25%; width: 4px; height: 4px; animation-delay: 1s;"></div>
+        <div class="dust-particle" style="bottom: 20%; left: 10%; width: 5px; height: 5px; animation-delay: 3s;"></div>
+
+        <div class="reveal-item reveal-1 flex items-center justify-between gap-3 pb-4 mb-6 border-b border-pink-border/80 relative z-10">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-2 h-2 rounded-full bg-rose-pink inline-block shadow-glow-pink shrink-0" aria-hidden="true"></span>
+            <span class="font-sans text-[11px] tracking-[0.22em] text-dusty-taupe font-semibold uppercase truncate">CHAPTER 01 · YOUR DAY</span>
+          </div>
+          <span class="font-sans text-xs tracking-[0.15em] text-dusty-taupe/80 font-medium whitespace-nowrap shrink-0">1 / 4</span>
+        </div>
+
+        <div class="reveal-item reveal-2 mb-6 relative z-10">
+          <div class="heading-underline-container">
+            <h2 class="font-serif text-2xl sm:text-3xl text-cocoa font-normal">
+              Happy birthday, birthday girl :)
+            </h2>
+            <div class="heading-underline" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <p class="reveal-item reveal-3 font-sans text-sm sm:text-base text-dark-taupe leading-relaxed mb-6 relative z-10">
+          Hope you have a really good birthday and get to enjoy your day exactly how you want to.
+        </p>
+
+        <div class="reveal-item reveal-3 flex items-center my-6 gap-3 opacity-60 relative z-10" aria-hidden="true">
+          <div class="w-6 h-[1px] bg-rose-pink"></div>
+          <div class="w-1.5 h-1.5 rounded-full bg-rose-pink"></div>
+        </div>
+
+        <p class="reveal-item reveal-4 font-serif italic text-base sm:text-lg text-cocoa mb-8 relative z-10">
+          Have a good one, Chhavi 🤎
+        </p>
+
+        <div class="reveal-item reveal-5 pt-2 relative z-10">
+          <button type="button" onclick="navigateTo('view-ch2')" class="btn-primary group">
+            <span>Keep going</span>
+            <span class="inline-block transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHAPTER 2 -->
+    <section id="view-ch2" class="view-section view-hidden w-full" aria-hidden="true">
+      <div class="chapter-card">
+        
+        <div class="absolute top-3 right-3 sm:top-4 sm:right-4 text-rose-pink/35 pointer-events-none float-slow z-0" style="animation-delay: -2s;" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M8 8 C 18 22, 28 32, 42 42" stroke-linecap="round"/>
+            <path d="M22 25 C 20 31, 26 36, 31 30 C 30 25, 25 21, 22 25 Z" fill="rgba(200,134,150,0.08)"/>
+            <circle cx="43" cy="43" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+
+        <div class="absolute bottom-4 right-4 text-rose-pink/30 pointer-events-none float-slow z-0" style="animation-delay: -2.5s;" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M5 45 C 18 32, 32 28, 45 8" stroke-linecap="round"/>
+            <path d="M20 30 C 25 34, 23 40, 29 37 C 28 32, 23 29, 20 30 Z" fill="rgba(200, 134, 150, 0.08)"/>
+            <circle cx="44" cy="9" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+
+        <div class="reveal-item reveal-1 flex items-center justify-between gap-3 pb-4 mb-6 border-b border-pink-border/80 relative z-10">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-2 h-2 rounded-full bg-rose-pink inline-block shadow-glow-pink shrink-0" aria-hidden="true"></span>
+            <span class="font-sans text-[11px] tracking-[0.22em] text-dusty-taupe font-semibold uppercase truncate">CHAPTER 02 · A LITTLE THOUGHT</span>
+          </div>
+          <span class="font-sans text-xs tracking-[0.15em] text-dusty-taupe/80 font-medium whitespace-nowrap shrink-0">2 / 4</span>
+        </div>
+
+        <div class="reveal-item reveal-2 mb-6 relative z-10">
+          <div class="heading-underline-container">
+            <h2 class="font-serif text-2xl sm:text-3xl text-cocoa font-normal">
+              Things I've noticed.
+            </h2>
+            <div class="heading-underline" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <p class="reveal-item reveal-3 font-sans text-sm sm:text-base text-dark-taupe leading-relaxed mb-6 relative z-10">
+          I really like your eyes, and your hair suits you so well.
+        </p>
+
+        <p class="reveal-item reveal-4 font-serif italic font-semibold text-base sm:text-lg text-cocoa mb-8 relative z-10">
+          And for the record, you're really pretty. 🤎
+        </p>
+
+        <div class="reveal-item reveal-5 pt-2 relative z-10">
+          <button type="button" onclick="navigateTo('view-ch3')" class="btn-primary group">
+            <span>Keep going</span>
+            <span class="inline-block transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHAPTER 3 -->
+    <section id="view-ch3" class="view-section view-hidden w-full" aria-hidden="true">
+      <div class="chapter-card">
+        
+        <div class="absolute top-3 right-3 sm:top-4 sm:right-4 text-rose-pink/35 pointer-events-none float-slow z-0" style="animation-delay: -1.5s;" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M42 8 C 32 22, 22 32, 8 42" stroke-linecap="round"/>
+            <path d="M28 25 C 22 20, 15 24, 20 31 C 25 30, 29 26, 28 25 Z" fill="rgba(200,134,150,0.08)"/>
+            <circle cx="7" cy="43" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+
+        <div class="dust-particle" style="top: 18%; right: 15%; width: 4px; height: 4px; animation-delay: 1.2s;"></div>
+        <div class="dust-particle" style="bottom: 25%; left: 8%; width: 5px; height: 5px; animation-delay: 3.5s;"></div>
+
+        <div class="reveal-item reveal-1 flex items-center justify-between gap-3 pb-4 mb-6 border-b border-pink-border/80 relative z-10">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-2 h-2 rounded-full bg-rose-pink inline-block shadow-glow-pink shrink-0" aria-hidden="true"></span>
+            <span class="font-sans text-[11px] tracking-[0.22em] text-dusty-taupe font-semibold uppercase truncate">CHAPTER 03 · A LITTLE OBSERVATION</span>
+          </div>
+          <span class="font-sans text-xs tracking-[0.15em] text-dusty-taupe/80 font-medium whitespace-nowrap shrink-0">3 / 4</span>
+        </div>
+
+        <div class="reveal-item reveal-2 mb-6 relative z-10">
+          <div class="heading-underline-container">
+            <h2 class="font-serif text-2xl sm:text-3xl text-cocoa font-normal">
+              The little things.
+            </h2>
+            <div class="heading-underline" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <p class="reveal-item reveal-3 font-sans text-sm sm:text-base text-dark-taupe leading-relaxed mb-4 relative z-10">
+          I really enjoy spending time with you. :)
+        </p>
+
+        <div class="reveal-item reveal-3 flex items-center my-4 gap-2 opacity-50 relative z-10" aria-hidden="true">
+          <div class="w-4 h-[1px] bg-rose-pink"></div>
+          <div class="w-1 h-1 rounded-full bg-rose-pink"></div>
+        </div>
+
+        <p class="reveal-item reveal-4 font-sans text-sm sm:text-base text-dark-taupe leading-relaxed mb-8 relative z-10">
+          And honestly, I respect the effort you put into the gym. 🤎
+        </p>
+
+        <div class="reveal-item reveal-5 pt-2 relative z-10">
+          <button type="button" onclick="navigateTo('view-ch4')" class="btn-primary group">
+            <span>Keep going</span>
+            <span class="inline-block transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHAPTER 4 -->
+    <section id="view-ch4" class="view-section view-hidden w-full" aria-hidden="true">
+      <div class="chapter-card">
+        
+        <div class="absolute top-3 right-3 sm:top-4 sm:right-4 text-rose-pink/35 pointer-events-none float-slow z-0" style="animation-delay: -0.8s;" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M42 42 C 32 28, 22 18, 8 8" stroke-linecap="round"/>
+            <path d="M28 25 C 30 19, 24 14, 19 20 C 20 25, 25 29, 28 25 Z" fill="rgba(200,134,150,0.08)"/>
+            <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+
+        <div class="dust-particle" style="top: 22%; right: 12%; width: 4px; height: 4px; animation-delay: 1.8s;"></div>
+        <div class="dust-particle" style="bottom: 18%; left: 10%; width: 5px; height: 5px; animation-delay: 4.2s;"></div>
+
+        <div class="reveal-item reveal-1 flex items-center justify-between gap-3 pb-4 mb-6 border-b border-pink-border/80 relative z-10">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-2 h-2 rounded-full bg-rose-pink inline-block shadow-glow-pink shrink-0" aria-hidden="true"></span>
+            <span class="font-sans text-[11px] tracking-[0.22em] text-dusty-taupe font-semibold uppercase truncate">CHAPTER 04 · A SMALL WISH</span>
+          </div>
+          <span class="font-sans text-xs tracking-[0.15em] text-dusty-taupe/80 font-medium whitespace-nowrap shrink-0">4 / 4</span>
+        </div>
+
+        <div class="reveal-item reveal-2 mb-6 relative z-10">
+          <div class="heading-underline-container">
+            <h2 class="font-serif text-2xl sm:text-3xl text-cocoa font-normal">
+              Never run out of reasons to smile.
+            </h2>
+            <div class="heading-underline" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <p class="reveal-item reveal-3 font-sans text-sm sm:text-base text-dark-taupe leading-relaxed mb-8 relative z-10">
+          I hope you always have things that excite you, people who appreciate you, and days that make you genuinely happy. 🤎
+        </p>
+
+        <div class="reveal-item reveal-4 pt-2 relative z-10">
+          <button type="button" onclick="navigateTo('view-note')" class="btn-primary group">
+            <span>One last thing</span>
+            <span class="inline-block transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ENVELOPE / NOTE SLIDE -->
+    <section id="view-note" class="view-section view-hidden w-full" aria-hidden="true">
+      <div class="relative bg-porcelain/95 backdrop-blur-md border border-pink-border rounded-2xl p-7 sm:p-10 shadow-paper hover:shadow-paper-hover transition-all duration-500 text-center overflow-hidden">
+        
+        <div class="absolute inset-2 border border-rose-pink/15 rounded-xl pointer-events-none" aria-hidden="true"></div>
+
+        <div class="dust-particle" style="top: 14%; left: 12%; width: 4px; height: 4px; animation-delay: 0.8s;"></div>
+        <div class="dust-particle" style="bottom: 16%; right: 14%; width: 5px; height: 5px; animation-delay: 2.7s;"></div>
+
+        <div class="reveal-item reveal-1 mb-6 relative z-10">
+          <p class="font-sans text-[11px] tracking-[0.25em] text-rose-pink font-semibold uppercase mb-1">BEFORE YOU GO</p>
+          <h2 class="font-serif text-2xl sm:text-3xl text-cocoa font-normal">One last little thing.</h2>
+          <div class="flex items-center justify-center gap-3 my-4 opacity-70" aria-hidden="true">
+            <div class="w-8 h-[1px] bg-gradient-to-r from-transparent to-pink-border"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-rose-pink"></div>
+            <div class="w-8 h-[1px] bg-gradient-to-l from-transparent to-pink-border"></div>
+          </div>
+        </div>
+
+        <div id="envelope-container" class="my-6 relative z-10">
+          
+          <button type="button" id="envelope-card" onclick="openEnvelope()" class="envelope-card-btn group w-full bg-porcelain/80 hover:bg-porcelain border border-pink-border hover:border-rose-pink/50 rounded-2xl p-8 sm:p-11 shadow-paper hover:shadow-paper-hover transition-all duration-300 hover:-translate-y-1 cursor-pointer flex flex-col items-center justify-center text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-pink focus-visible:ring-offset-2 relative overflow-hidden">
+            
+            <div class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 text-rose-pink/40 pointer-events-none float-slow" aria-hidden="true">
+              <svg width="60" height="100" viewBox="0 0 60 100" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+                <path d="M 50 90 C 25 70, 10 45, 30 10" />
+                <path d="M 38 75 C 24 71, 20 62, 32 60 C 35 65, 38 71, 38 75 Z" fill="rgba(200, 134, 150, 0.1)" />
+                <path d="M 22 53 C 10 46, 10 35, 20 37 C 22 44, 22 49, 22 53 Z" fill="rgba(200, 134, 150, 0.1)" />
+                <path d="M 24 31 C 15 21, 21 13, 27 19 C 27 24, 25 28, 24 31 Z" fill="rgba(200, 134, 150, 0.1)" />
+                <circle cx="30" cy="10" r="1.5" fill="currentColor" />
+              </svg>
+            </div>
+
+            <div class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 text-rose-pink/40 pointer-events-none float-slow" style="animation-delay: -2.5s;" aria-hidden="true">
+              <svg width="60" height="100" viewBox="0 0 60 100" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+                <path d="M 10 90 C 35 70, 50 45, 30 10" />
+                <path d="M 22 75 C 36 71, 40 62, 28 60 C 25 65, 22 71, 22 75 Z" fill="rgba(200, 134, 150, 0.1)" />
+                <path d="M 38 53 C 50 46, 50 35, 40 37 C 38 44, 38 49, 38 53 Z" fill="rgba(200, 134, 150, 0.1)" />
+                <path d="M 36 31 C 45 21, 39 13, 33 19 C 33 24, 35 28, 36 31 Z" fill="rgba(200, 134, 150, 0.1)" />
+                <circle cx="30" cy="10" r="1.5" fill="currentColor" />
+              </svg>
+            </div>
+
+            <div class="wax-seal-glow relative z-10 w-16 h-16 bg-warm-ivory border border-pink-border group-hover:border-rose-pink/50 rounded-full flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300 mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-cocoa group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+            </div>
+
+            <span class="relative z-10 font-sans text-xs tracking-[0.22em] text-cocoa font-semibold uppercase flex items-center gap-2">
+              <span>Open it</span>
+              <span class="inline-block transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden="true">→</span>
+            </span>
+          </button>
+
+          <div id="letter-content" class="hidden bg-porcelain border border-pink-border rounded-2xl p-7 sm:p-10 text-left shadow-envelope relative overflow-hidden">
+            <p class="letter-reveal-1 opacity-0 font-serif text-lg sm:text-xl text-cocoa mb-4 leading-relaxed transition-all duration-700">
+              Happy birthday again, Chhavi.
+            </p>
+            <p class="letter-reveal-2 opacity-0 font-serif italic text-base sm:text-lg text-dark-taupe mb-8 leading-relaxed transition-all duration-700">
+              Stay happy, always. 🤎
+            </p>
+            <div class="letter-reveal-3 opacity-0 pt-4 border-t border-pink-border/70 text-right transition-all duration-700">
+              <span class="font-sans text-xs tracking-[0.25em] text-rose-pink font-semibold uppercase">
+                — TANISHQ
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <div id="btn-to-end" class="hidden pt-4 relative z-10">
+          <button type="button" onclick="navigateTo('view-end')" class="btn-primary group">
+            <span>Finish</span>
+            <span class="inline-block transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- END SCREEN -->
+    <section id="view-end" class="view-section view-hidden w-full" aria-hidden="true">
+      <div class="relative bg-porcelain/95 backdrop-blur-md border border-pink-border rounded-2xl p-8 sm:p-12 shadow-paper hover:shadow-paper-hover transition-all duration-500 text-center overflow-hidden">
+        
+        <div class="flex justify-center mb-4 text-rose-pink/40" aria-hidden="true">
+          <svg width="40" height="12" viewBox="0 0 40 12" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M0 6 Q20 0 40 6 Q20 12 0 6 Z" />
+          </svg>
+        </div>
+
+        <div class="reveal-item reveal-1 mb-6">
+          <p class="font-sans text-[11px] tracking-[0.25em] text-rose-pink font-semibold uppercase">
+            END OF THIS LITTLE GIFT
+          </p>
+          <div class="w-12 h-[1px] bg-pink-border mx-auto mt-3"></div>
+        </div>
+
+        <p class="reveal-item reveal-2 font-serif italic text-2xl sm:text-3xl md:text-4xl text-cocoa mb-10 leading-snug">
+          Hope it made you smile
+        </p>
+
+        <div class="reveal-item reveal-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button type="button" onclick="restartExperience()" class="btn-primary w-full sm:w-auto">
+            <span>Read it again</span>
+            <span aria-hidden="true">↺</span>
+          </button>
+
+          <button type="button" onclick="navigateTo('view-cover')" class="btn-secondary w-full sm:w-auto">
+            <span>Back to cover</span>
+          </button>
+        </div>
+
+        <div class="mt-10 flex justify-center text-rose-pink/35 pointer-events-none float-slow" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M20 35 C20 20, 10 10, 5 5" />
+            <path d="M20 35 C20 20, 30 10, 35 5" />
+            <circle cx="20" cy="35" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const SCREEN_IDS = [
+      'view-cover',
+      'view-ch1',
+      'view-ch2',
+      'view-ch3',
+      'view-ch4',
+      'view-note',
+      'view-end'
+    ];
+
+    let isNavigating = false;
+
+    function navigateTo(targetId) {
+      if (isNavigating) return;
+      if (!SCREEN_IDS.includes(targetId)) return;
+
+      isNavigating = true;
+
+      SCREEN_IDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        if (id === targetId) {
+          el.classList.remove('view-hidden');
+          el.classList.add('view-active');
+          el.setAttribute('aria-hidden', 'false');
+        } else {
+          el.classList.remove('view-active');
+          el.classList.add('view-hidden');
+          el.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+
+      setTimeout(() => {
+        isNavigating = false;
+      }, 550);
+    }
+
+    function triggerCelebrationBurst() {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+
+      const existing = document.getElementById('celebration-burst-container');
+      if (existing) existing.remove();
+
+      const container = document.createElement('div');
+      container.id = 'celebration-burst-container';
+      container.style.position = 'fixed';
+      container.style.inset = '0';
+      container.style.pointerEvents = 'none';
+      container.style.zIndex = '9999';
+      container.style.overflow = 'hidden';
+
+      const envelopeCard = document.getElementById('envelope-card');
+      let originX = window.innerWidth / 2;
+      let originY = window.innerHeight / 2;
+
+      if (envelopeCard) {
+        const rect = envelopeCard.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          originX = rect.left + rect.width / 2;
+          originY = rect.top + rect.height / 2;
+        }
+      }
+
+      const particleTypes = ['heart', 'petal', 'sparkle', 'confetti', 'circle'];
+      const colors = ['#C88696', '#F4E1E5', '#E6C594', '#FFF9F6', '#E5D6D0', '#594034'];
+      const particleCount = 55;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'celebration-particle';
+        particle.style.left = originX + 'px';
+        particle.style.top = originY + 'px';
+
+        const type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        if (type === 'heart') {
+          particle.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="${color}"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+        } else if (type === 'petal') {
+          particle.style.width = '10px';
+          particle.style.height = '14px';
+          particle.style.backgroundColor = color;
+          particle.style.borderRadius = '50% 0 50% 50%';
+        } else if (type === 'sparkle') {
+          particle.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="${color}"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>`;
+        } else if (type === 'confetti') {
+          particle.style.width = '7px';
+          particle.style.height = '11px';
+          particle.style.backgroundColor = color;
+          particle.style.borderRadius = '2px';
+        } else {
+          particle.style.width = '6px';
+          particle.style.height = '6px';
+          particle.style.backgroundColor = color;
+          particle.style.borderRadius = '50%';
+        }
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 80 + Math.random() * 220;
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+
+        const driftX = (Math.random() - 0.5) * 60;
+        const driftY = (type === 'sparkle' ? -40 : 60) + Math.random() * 90;
+
+        const rot = (Math.random() - 0.5) * 720;
+        const duration = 1.4 + Math.random() * 1.2;
+        const delay = Math.random() * 0.18;
+        const peakScale = 0.9 + Math.random() * 0.6;
+        const endScale = 0.3 + Math.random() * 0.5;
+
+        particle.style.setProperty('--dx', `${dx}px`);
+        particle.style.setProperty('--dy', `${dy}px`);
+        particle.style.setProperty('--drift-x', `${driftX}px`);
+        particle.style.setProperty('--drift-y', `${driftY}px`);
+        particle.style.setProperty('--rot', `${rot}deg`);
+        particle.style.setProperty('--duration', `${duration}s`);
+        particle.style.setProperty('--delay', `${delay}s`);
+        particle.style.setProperty('--peak-scale', peakScale);
+        particle.style.setProperty('--end-scale', endScale);
+
+        container.appendChild(particle);
+      }
+
+      document.body.appendChild(container);
+
+      setTimeout(() => {
+        if (container && container.parentNode) {
+          container.remove();
+        }
+      }, 3200);
+    }
+
+    function openEnvelope() {
+      const envelopeCard = document.getElementById('envelope-card');
+      const letterContent = document.getElementById('letter-content');
+      const btnToEnd = document.getElementById('btn-to-end');
+
+      triggerCelebrationBurst();
+
+      if (envelopeCard) {
+        envelopeCard.classList.add('hidden');
+      }
+
+      if (letterContent) {
+        letterContent.classList.remove('hidden');
+
+        const p1 = letterContent.querySelector('.letter-reveal-1');
+        const p2 = letterContent.querySelector('.letter-reveal-2');
+        const sig = letterContent.querySelector('.letter-reveal-3');
+
+        setTimeout(() => {
+          if (p1) {
+            p1.classList.remove('opacity-0');
+            p1.classList.add('opacity-100');
+          }
+        }, 150);
+
+        setTimeout(() => {
+          if (p2) {
+            p2.classList.remove('opacity-0');
+            p2.classList.add('opacity-100');
+          }
+        }, 650);
+
+        setTimeout(() => {
+          if (sig) {
+            sig.classList.remove('opacity-0');
+            sig.classList.add('opacity-100');
+          }
+        }, 1150);
+      }
+
+      if (btnToEnd) {
+        setTimeout(() => {
+          btnToEnd.classList.remove('hidden');
+        }, 1300);
+      }
+    }
+
+    function restartExperience() {
+      const existing = document.getElementById('celebration-burst-container');
+      if (existing) existing.remove();
+
+      const envelopeCard = document.getElementById('envelope-card');
+      const letterContent = document.getElementById('letter-content');
+      const btnToEnd = document.getElementById('btn-to-end');
+
+      if (envelopeCard) {
+        envelopeCard.classList.remove('hidden');
+      }
+
+      if (letterContent) {
+        letterContent.classList.add('hidden');
+        const reveals = letterContent.querySelectorAll('.letter-reveal-1, .letter-reveal-2, .letter-reveal-3');
+        reveals.forEach(el => {
+          el.classList.remove('opacity-100');
+          el.classList.add('opacity-0');
+        });
+      }
+
+      if (btnToEnd) {
+        btnToEnd.classList.add('hidden');
+      }
+
+      navigateTo('view-ch1');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      navigateTo('view-cover');
+    });
+  </script>
+</body>
+</html>
